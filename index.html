@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- <script src="dist/bundle.js"></script> -->
+    <script type="module">
+      import { WebPortal } from "https://cdn.jsdelivr.net/npm/jsjiit/dist/jsjiit.esm.js";
+
+      //cconst attendance=require("./object.json");
+      const portal = new WebPortal();
+
+      const user = "23104056";
+      const pass = "R0hanBatra@16072005";
+
+      await portal.student_login(user, pass);
+
+      const meta = await portal.get_attendance_meta();
+      const head = meta.latest_header();
+      const sem = meta.semesters[1];
+      const attendance =await portal.get_attendance(head,sem);
+      let tableheads = `<table border="1">
+        <thead>
+            <tr>
+                <th>Course Name</th>
+                <th>Course Code</th>
+                <th>Lecture</th>
+                <th>Tutorial</th>
+                <th>Practical</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>`;
+
+      let tablend = `</tbody>
+    </table>`;
+      let tabledata = "";
+      attendance.studentattendancelist.forEach((el) => {
+        tabledata += `
+            <tr>
+                <td>${el.subjectcode}</td>
+                <td>${el.individualsubjectcode}</td>
+                <td>${el.Lpercentage}</td>
+                <td>${el.Tpercentage}</td>
+                <td>${el.Ppercentage}</td>
+                <td>${el.LTpercantage}</td>
+            </tr>`;
+      });
+
+      let table_to_write = tableheads + tabledata + tablend;
+      document.write(table_to_write);
+    </script>
+  </body>
+</html>
