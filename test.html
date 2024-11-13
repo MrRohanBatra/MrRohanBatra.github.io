@@ -15,64 +15,90 @@
             height: 100vh;
             background-color: #f4f4f9;
         }
-        #form-container, #menu-container {
-            background: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
+        .container {
             width: 90%;
             max-width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
         h1 {
             color: #333;
+            margin-bottom: 15px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 20px;
         }
         input[type="text"] {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
+            padding: 12px;
+            margin-bottom: 15px;
             border: 1px solid #ccc;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
         }
         button {
+            width: 100%;
+            padding: 12px;
             background-color: #4CAF50;
             color: white;
-            padding: 10px 20px;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            border-radius: 8px;
             font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
         button:hover {
             background-color: #45a049;
         }
-        #menu-container ul {
-            list-style-type: none;
+        .menu {
+            display: none;
+        }
+        .menu ul {
+            list-style: none;
             padding: 0;
         }
-        #menu-container ul li {
+        .menu ul li {
             margin: 10px 0;
         }
-        #menu-container ul li button {
+        .menu ul li button {
+            padding: 10px;
             width: 100%;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .menu ul li button:hover {
+            background-color: #0056b3;
+        }
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="form-container">
+    <div id="form-container" class="container">
         <h1>Welcome</h1>
         <p>Enter your enrollment number to continue:</p>
         <input type="text" id="enrollment" placeholder="Enrollment Number">
         <button onclick="showMenu()">Submit</button>
     </div>
 
-    <div id="menu-container" style="display: none;">
-        <h1>Student Dashboard</h1>
+    <div id="menu-container" class="menu container">
+        <h1>Dashboard</h1>
         <ul>
-            <li><button onclick="alert('Attendance Details')">Attendance</button></li>
-            <li><button onclick="alert('Marks Details')">Marks</button></li>
-            <li><button onclick="alert('Personal Info')">Personal Info</button></li>
+            <li><button onclick="console.log('Attendance')">Attendance</button></li>
+            <li><button onclick="console.log('Marks')">Marks</button></li>
+            <li><button onclick="console.log('Personal Info')">Personal Info</button></li>
         </ul>
     </div>
 
