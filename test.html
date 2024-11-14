@@ -1,117 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Portal</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Attendance Report</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f9;
-        }
-        .container {
-            width: 90%;
-            max-width: 400px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-        p {
-            color: #666;
-            margin-bottom: 20px;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 16px;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .menu {
-            display: none;
-        }
-        .menu ul {
-            list-style: none;
-            padding: 0;
-        }
-        .menu ul li {
-            margin: 10px 0;
-        }
-        .menu ul li button {
-            padding: 10px;
-            width: 100%;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .menu ul li button:hover {
-            background-color: #0056b3;
-        }
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-        }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f9;
+      }
+      header {
+        background-color: #4CAF50;
+        color: white;
+        text-align: center;
+        padding: 1rem;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 1.8rem;
+      }
+      table {
+        width: 90%;
+        margin: 2rem auto;
+        border-collapse: collapse;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+      thead {
+        background-color: #4CAF50;
+        color: white;
+      }
+      th, td {
+        padding: 12px 16px;
+        text-align: center;
+        border: 1px solid #ddd;
+      }
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      tr:hover {
+        background-color: #f1f1f1;
+      }
+      th {
+        font-weight: bold;
+      }
+      footer {
+        text-align: center;
+        padding: 1rem;
+        background-color: #4CAF50;
+        color: white;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+      }
     </style>
-</head>
-<body>
-    <div id="form-container" class="container">
-        <h1>Welcome</h1>
-        <p>Enter your enrollment number to continue:</p>
-        <input type="text" id="enrollment" placeholder="Enrollment Number">
-        <button onclick="showMenu()">Submit</button>
-    </div>
+  </head>
+  <body>
+    <header>
+      <h1>Student Attendance Report</h1>
+    </header>
+    <div id="attendance-table"></div>
+    <footer>
+      <p>&copy; 2024 Attendance Tracker</p>
+    </footer>
+    <script type="module">
+      import { WebPortal } from "https://cdn.jsdelivr.net/npm/jsjiit/dist/jsjiit.esm.js";
 
-    <div id="menu-container" class="menu container">
-        <h1>Dashboard</h1>
-        <ul>
-            <li><button onclick="console.log('Attendance')">Attendance</button></li>
-            <li><button onclick="console.log('Marks')">Marks</button></li>
-            <li><button onclick="console.log('Personal Info')">Personal Info</button></li>
-        </ul>
-    </div>
+      const portal = new WebPortal();
+      const user = "23104056";
+      const pass = "R0hanBatra@16072005";
 
-    <script>
-        function showMenu() {
-            const enrollment = document.getElementById('enrollment').value.trim();
-            if (enrollment) {
-                document.getElementById('form-container').style.display = 'none';
-                document.getElementById('menu-container').style.display = 'block';
-            } else {
-                alert("Please enter your enrollment number.");
-            }
-        }
+      // Async function to handle attendance data
+      (async () => {
+        await portal.student_login(user, pass);
+
+        const meta = await portal.get_attendance_meta();
+        const head = meta.latest_header();
+        const sem = meta.semesters[1];
+        const attendance = await portal.get_attendance(head, sem);
+
+        let tableHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Course Name</th>
+                <th>Course Code</th>
+                <th>Lecture (%)</th>
+                <th>Tutorial (%)</th>
+                <th>Practical (%)</th>
+                <th>Total (%)</th>
+              </tr>
+            </thead>
+            <tbody>`;
+
+        attendance.studentattendancelist.forEach((el) => {
+          tableHTML += `
+              <tr>
+                <td>${el.subjectcode}</td>
+                <td>${el.individualsubjectcode}</td>
+                <td>${el.Lpercentage || "N/A"}</td>
+                <td>${el.Tpercentage || "N/A"}</td>
+                <td>${el.Ppercentage || "N/A"}</td>
+                <td>${el.LTpercantage || "N/A"}</td>
+              </tr>`;
+        });
+
+        tableHTML += `</tbody></table>`;
+        document.getElementById("attendance-table").innerHTML = tableHTML;
+      })();
     </script>
-</body>
+  </body>
 </html>
