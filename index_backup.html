@@ -3,10 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Modern Login Page</title>
+    <title>JIIT Portal</title>
     <link rel="stylesheet" href="./src/style.css">
     <link rel="shortcut icon" href="./src/jaypee-institute-of-information-and-technology-jiit-noida-logo.png" type="image/x-icon">
     <style>
+      /* Loading spinner styles */
       .loading-spinner {
         position: fixed;
         top: 0;
@@ -37,22 +38,35 @@
   <body>
     <div class="login-container">
       <div class="logo">
-        <img src="./src/jaypee-institute-of-information-and-technology-jiit-noida-logo.png" alt="Company Logo" />
+        <!-- Replace 'logo.png' with the path to your logo -->
+        <img
+          src="./src/jaypee-institute-of-information-and-technology-jiit-noida-logo.png"
+          alt="Company Logo"
+        />
       </div>
       <h2>Welcome Back</h2>
       <div>
         <div class="form-group">
           <label for="enroll">Enrollment Number</label>
-          <input type="text" id="enroll" placeholder="Enter your Enrollment Number" />
+          <input
+            type="text"
+            id="enroll"
+            placeholder="Enter your Enrollment Number"
+          />
         </div>
         <div class="form-group">
           <label for="password">Password</label>
-          <input type="password" id="password" placeholder="Enter your password" />
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+          />
         </div>
         <button class="login-btn" id="login-button">Log In</button>
       </div>
     </div>
 
+    <!-- Loading spinner -->
     <div id="loading-spinner" class="loading-spinner">
       <div class="spinner"></div>
     </div>
@@ -61,10 +75,13 @@
       import { WebPortal, LoginError } from "https://cdn.jsdelivr.net/npm/jsjiit/dist/jsjiit.esm.js";
       const portal = new WebPortal();
 
+      // Function to check localStorage and auto-login
       async function checkAutoLogin() {
+        // Retrieve saved credentials from localStorage
         let enroll = localStorage.getItem("enroll");
         let pass = localStorage.getItem("pass");
 
+        // If credentials are found, populate the form fields and login
         if (enroll && pass) {
           document.getElementById("enroll").value = enroll;
           document.getElementById("password").value = pass;
@@ -73,45 +90,49 @@
         }
       }
 
+      // Login function
       async function login(enroll = null, pass = null) {
+        // Use the form inputs if no localStorage data is available
         if (!enroll) enroll = document.getElementById("enroll").value.trim();
         if (!pass) pass = document.getElementById("password").value;
 
+        // Simple validation to prevent empty submissions
         if (!enroll || !pass) {
           alert("Enrollment number and password cannot be empty.");
           return false;
         }
 
+        // Show the loading spinner
         document.getElementById("loading-spinner").style.display = "flex";
 
+        // Save credentials to localStorage
         localStorage.setItem("enroll", enroll);
         localStorage.setItem("pass", pass);
 
+        // Attempt to log in
         try {
           await portal.student_login(enroll, pass);
           console.log("Login successful");
+          console.log("Portal object:", portal);
           localStorage.setItem("portal", JSON.stringify(portal));
           window.location.href = "./dashboard.html";
         } catch (error) {
-          if (error instanceof LoginError && error.message.includes("JIIT Web Portal server is temporarily unavailable")) {
-            alert("JIIT Web Portal server is temporarily unavailable. Please try again later.");
-          } else if (error instanceof LoginError && error.message.includes("Failed to fetch")) {
-            alert("Please check your internet connection. If connected, JIIT Web Portal server is temporarily unavailable.");
-          } else {
-            console.error("Login failed:", error);
-            alert("Login failed. Please try again.");
-          }
+          console.error("Login failed:", error);
+          alert("Login failed, please try again.");
         } finally {
+          // Hide the loading spinner after the login attempt
           document.getElementById("loading-spinner").style.display = "none";
         }
       }
 
+      // Adding event listener to the login button
       document.getElementById("login-button").addEventListener("click", () => {
         const enroll = document.getElementById("enroll").value.trim();
         const pass = document.getElementById("password").value;
         login(enroll, pass);
       });
 
+      // Check for auto-login when the page loads
       window.onload = checkAutoLogin;
     </script>
   </body>
