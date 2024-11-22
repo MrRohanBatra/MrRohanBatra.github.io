@@ -168,15 +168,33 @@ async function subjects() {
   document.getElementById("subjects").innerHTML = tofill;
 }
 document.addEventListener("DOMContentLoaded", async () => {
-  await login();
-  await subjects();
-  exam();
-  await fetch_attendance();
-  attendanceToTable(student_attendace);
-  //average(student_attendace);
-  checkAttendance(student_attendace);
-  console.log("All tasks done");
-});function attendanceToTable(attendance) {
+  try {
+    console.log("Initializing application...");
+
+    await login();
+    console.log("Login completed");
+
+    await subjects();
+    console.log("Subjects fetched");
+
+    exam();
+    console.log("Exam info set");
+
+    
+    await fetch_attendance();
+    attendanceToTable(student_attendace);
+    checkAttendance(student_attendace);
+    console.log("Attendance tasks completed");
+
+    console.log("All tasks done");
+  } catch (error) {
+    console.error("An error occurred during initialization:", error);
+    document.getElementById("error").innerText =
+      "Something went wrong. Please try refreshing the page.";
+  }
+});
+
+function attendanceToTable(attendance) {
   const data = attendance.studentattendancelist;
 
   if (!data || data.length === 0) {
