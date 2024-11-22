@@ -135,7 +135,7 @@ async function subjects() {
 
   // Generate HTML for subjects
   let tofill = `
-    <table border="1" style="border-collapse: collapse; width: 100%;">
+    <table border="1" cellpadding="10px" style="border-collapse: collapse; width: 100%;">
       <thead>
         <tr>
           <th>Subject Name</th>
