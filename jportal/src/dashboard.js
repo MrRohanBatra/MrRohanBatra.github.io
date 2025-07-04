@@ -13,9 +13,7 @@ async function login() {
     );
     console.log("login successfull");
     document.getElementById("name").innerText = portal.session.enrollmentno;
-    document.getElementById("welcome").innerText += toProperCase(
-      portal.session.name
-    );
+    document.getElementById("welcome").innerText += ` ${toProperCase(portal.session.name)}`;
   } catch (error) {
     console.log(error);
   }
