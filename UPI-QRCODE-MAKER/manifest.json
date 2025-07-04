@@ -1,6 +1,6 @@
 {
-    "name": "UPI QR Code Maker",
-    "short_name": "upi_qr_code_maker",
+    "name": "flutter_upi",
+    "short_name": "flutter_upi",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
